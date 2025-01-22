@@ -29,10 +29,10 @@ namespace hakaton_API.Controllers
 
         // GET: api/Tests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Test>>> GetTests()
+        public async Task<IEnumerable<Test>> GetTests()
         {
             var tests = await _testService.GetAllTestsAsync();
-            return Ok(tests);
+            return tests;
         }
 
         // GET: api/Tests/5

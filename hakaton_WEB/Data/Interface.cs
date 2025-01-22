@@ -15,5 +15,8 @@
 
         [Get("/tests")]
         Task<IEnumerable<Test>> GetTestAsync();
+
+        [Get("/employee/{id}")]
+        Task<Employee> GetEmployeeByIdAsync(int id);
     }
 }

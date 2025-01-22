@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddRefitClient<IApiClient>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:44375/api"));
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7283/api"));
 // Add services to the container.
 builder.Services.AddRazorPages();
 
