@@ -5,7 +5,7 @@
     public interface IApiClient
     {
         [Get("/roles")]
-        Task<Role> GetRoleAsync();
+        Task<IEnumerable<Role>> GetRoleAsync();
         [Get("/roles/{id}")]
         Task<Role> GetRoleAsync(int id);
 

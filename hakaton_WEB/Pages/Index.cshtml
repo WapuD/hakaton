@@ -1,10 +1,22 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Авторизация";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Авторизация пользователя</h1>
+
+<form method="post">
+    <div>
+        <label for="Login">Логин:</label>
+        <input type="text" id="Login" name="Login" required />
+        <label for="Password">Пароль:</label>
+        <input type="text" id="Password" name="Password" required />
+    </div>
+    <button type="submit">Авторизоваться</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Login) && !string.IsNullOrEmpty(Model.Password))
+{
+    <h2>Вы ввели имя: @Model.Name</h2>
+}

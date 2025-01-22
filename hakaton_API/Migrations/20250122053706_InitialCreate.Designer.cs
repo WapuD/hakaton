@@ -12,8 +12,8 @@ using hakaton_API.Data;
 namespace hakaton_API.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20250122034807_AddNewTables")]
-    partial class AddNewTables
+    [Migration("20250122053706_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
