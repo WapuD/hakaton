@@ -1,5 +1,5 @@
 ﻿@page
-@model hakaton_WEB.Pages.IndexModel
+@model hakaton_WEB.Pages.TestsPageModel
 
 <h1>Список тестов</h1>
 
@@ -11,7 +11,7 @@
             <div class="test-item">
                 <h3>@test.Competency.Name </h3>  <!-- Предполагается, что у Test есть свойство Name -->
                 <p>@test.ArticleTest</p>  <!-- Предполагается, что у Test есть свойство Description -->
-                <button class="btn">Пройти тест</button>
+                <a asp-page="TestPage.cshtml" asp-route-testId="@test.Id" class="btn btn-primary">Пройти тест</a>
             </div>
         }
     }

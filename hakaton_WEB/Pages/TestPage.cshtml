@@ -1,0 +1,55 @@
+﻿@page
+@model hakaton_WEB.Pages.Shared.TestPageModel
+
+<h1>Тест по компетенции: @Model.test.Competency.Name</h1>
+
+@if (Model.CurrentQuestion != null)
+{
+    <div class="question">
+        <h3>Вопрос @Model.CurrentQuestion.Id: @Model.CurrentQuestion.Question</h3>
+        
+        <form method="post">
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="selectedAnswer" value="0" id="answer0" required />
+                <label class="form-check-label" for="answer0">@Model.CurrentQuestion.Answer0</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="selectedAnswer" value="1" id="answer1" required />
+                <label class="form-check-label" for="answer1">@Model.CurrentQuestion.Answer1</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="selectedAnswer" value="2" id="answer2" required />
+                <label class="form-check-label" for="answer2">@Model.CurrentQuestion.Answer2</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="selectedAnswer" value="3" id="answer3" required />
+                <label class="form-check-label" for="answer3">@Model.CurrentQuestion.Answer3</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Следующий вопрос</button>
+        </form>
+    </div>
+
+    @if (Model.IsLastQuestion)
+    {
+        <a href="/Index" class="btn btn-success">Закончить тестирование</a>
+    }
+}
+else
+{
+    <p>Тест завершён.</p>
+}
+
+<style>
+    .question {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .btn {
+        margin-top: 20px;
+    }
+</style>
