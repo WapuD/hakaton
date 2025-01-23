@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using hakaton_API.Data;
 using hakaton_API.Data.Models;
+using hakaton_API.Controllers.Interface;
+using hakaton_API.Controllers.Services;
 
 namespace hakaton_API.Controllers
 {
@@ -15,17 +17,21 @@ namespace hakaton_API.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly DBContext _context;
+        private readonly IRoleService _roleService;
 
-        public EmployeesController(DBContext context)
+        public EmployeesController(DBContext context, IRoleService roleService)
         {
             _context = context;
+            _roleService = roleService;
         }
 
         // GET: api/Employees
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployee()
         {
-            return await _context.Employee.ToListAsync();
+            return await _context.Employee
+                .Include(e => e.Role) // Жадная загрузка роли
+                .ToListAsync();
         }
 
         // GET: api/Employees/5
@@ -76,12 +82,38 @@ namespace hakaton_API.Controllers
         // POST: api/Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        public async Task<ActionResult<EmployeeDto>> PostEmployee(EmployeeDto employeeDto)
         {
+            // Используем сервис для получения роли по RoleId
+            var role = await _roleService.GetRoleByIdAsync(employeeDto.RoleId);
+            if (role == null)
+            {
+                return NotFound($"Role with ID {employeeDto.RoleId} not found.");
+            }
+
+            // Преобразование DTO в сущность Employee
+            var employee = new Employee
+            {
+                Surname = employeeDto.Surname,
+                Name = employeeDto.Name,
+                Patronymic = employeeDto.Patronymic,
+                RoleId = employeeDto.RoleId,
+                Role = role
+            };
+
             _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
+            var createdEmployeeDto = new EmployeeDto
+            {
+                Id = employee.Id,
+                Surname = employee.Surname,
+                Name = employee.Name,
+                Patronymic = employee.Patronymic,
+                RoleId = employee.RoleId
+            };
+
+            return CreatedAtAction("GetEmployee", new { id = createdEmployeeDto.Id }, createdEmployeeDto);
         }
 
         // DELETE: api/Employees/5
