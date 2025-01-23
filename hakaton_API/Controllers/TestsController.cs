@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using hakaton_API.Data;
 using hakaton_API.Data.Models;
+using hakaton_API.Controllers.Services;
+using hakaton_API.Controllers.Interface;
 
 namespace hakaton_API.Controllers
 {
@@ -15,87 +17,110 @@ namespace hakaton_API.Controllers
     public class TestsController : ControllerBase
     {
         private readonly DBContext _context;
+        private readonly ITestService _testService;
+        private readonly ICompetencyService _competencyService;
 
-        public TestsController(DBContext context)
+        public TestsController(DBContext context, ITestService testService, ICompetencyService competencyService)
         {
             _context = context;
+            _testService = testService;
+            _competencyService = competencyService;
         }
 
         // GET: api/Tests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Test>>> GetTest()
+        public async Task<IEnumerable<Test>> GetTests()
         {
-            return await _context.Test.ToListAsync();
+            var tests = await _testService.GetAllTestsAsync();
+            return tests;
         }
 
         // GET: api/Tests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Test>> GetTest(int id)
         {
-            var test = await _context.Test.FindAsync(id);
+            var test = await _testService.GetTestByIdAsync(id);
 
             if (test == null)
             {
                 return NotFound();
             }
 
-            return test;
+            return Ok(test);
         }
 
         // PUT: api/Tests/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTest(int id, Test test)
         {
             if (id != test.Id)
             {
-                return BadRequest();
+                return BadRequest("ID mismatch");
             }
 
-            _context.Entry(test).State = EntityState.Modified;
+            var success = await _testService.UpdateTestAsync(test);
 
-            try
+            if (!success)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TestExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound("Test not found");
             }
 
-            return NoContent();
+            return NoContent(); // Возвращаем 204 No Content при успешном обновлении
         }
 
         // POST: api/Tests
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Test>> PostTest(Test test)
+        public async Task<ActionResult<TestDto>> PostTest(TestDto testDto)
         {
+            // Используем сервис для получения роли по RoleId
+            var competency = await _competencyService.GetCompetencyByIdAsync(testDto.CompetencyId);
+            if (competency == null)
+            {
+                return NotFound($"Test with ID {competency.Id} not found.");
+            }
+
+            // Преобразование DTO в сущность test
+            var test = new Test
+            {
+                ArticleTest = testDto.ArticleTest,
+                CompetencyId = testDto.CompetencyId,
+                Question = testDto.Question,
+                Answer0 = testDto.Answer0,
+                Answer1 = testDto.Answer1,
+                Answer2 = testDto.Answer2,
+                Answer3 = testDto.Answer3,
+                Competency = competency
+            };
+
             _context.Test.Add(test);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTest", new { id = test.Id }, test);
+            var createdTestDto = new TestDto
+            {
+                Id = test.Id,
+                ArticleTest = test.ArticleTest,
+                CompetencyId = test.CompetencyId,
+                Question = test.Question,
+                Answer0 = test.Answer0,
+                Answer1 = test.Answer1,
+                Answer2 = test.Answer2,
+                Answer3 = test.Answer3
+            };
+
+
+            return CreatedAtAction("GetTest", new { id = createdTestDto.Id }, createdTestDto);
         }
 
         // DELETE: api/Tests/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTest(int id)
         {
-            var test = await _context.Test.FindAsync(id);
-            if (test == null)
+            var success = await _testService.DeleteTestAsync(id);
+
+            if (!success)
             {
                 return NotFound();
             }
-
-            _context.Test.Remove(test);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

@@ -1,10 +1,55 @@
 ﻿@page
-@model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
+@model hakaton_WEB.Pages.IndexModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Список тестов</h1>
+
+<div class="test-container">
+    @if (Model.Tests != null && Model.Tests.Any())
+    {
+        foreach (var test in Model.Tests)
+        {
+            <div class="test-item">
+                <h3>@test.Id </h3>  <!-- Предполагается, что у Test есть свойство Name -->
+                <p>@test.ArticleTest</p>  <!-- Предполагается, что у Test есть свойство Description -->
+                <p>@test.CompetencyId</p>  <!-- Предполагается, что у Test есть свойство Description -->
+                <p>@test.Question</p>  <!-- Предполагается, что у Test есть свойство Description -->
+                <button class="btn">Пройти тест</button>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Нет доступных тестов.</p>
+    }
 </div>
+
+<style>
+    .test-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; /* Распределяет элементы по всей ширине */
+        margin: 0 -10px; /* Убирает отступы между колонками */
+    }
+
+    .test-item {
+        flex: 0 0 calc(50% - 20px); /* Задает ширину элемента (50% минус отступы) */
+        margin: 10px; /* Отступы между элементами */
+        padding: 15px;
+        border: 1px solid #ccc; /* Граница вокруг элемента */
+        border-radius: 5px; /* Закругление углов */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта глубины */
+    }
+
+    .btn {
+        background-color: #007bff; /* Цвет кнопки */
+        color: white; /* Цвет текста кнопки */
+        border: none; /* Убираем границу */
+        padding: 10px 15px; /* Отступы внутри кнопки */
+        border-radius: 5px; /* Закругление углов кнопки */
+        cursor: pointer; /* Курсор при наведении */
+    }
+
+        .btn:hover {
+            background-color: #0056b3; /* Цвет кнопки при наведении */
+        }
+</style>
