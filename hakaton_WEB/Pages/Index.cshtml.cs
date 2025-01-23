@@ -1,8 +1,11 @@
+using System.Net;
 using hakaton_API.Data.Models;
 using hakaton_WEB.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Refit;
 
 namespace hakaton_WEB.Pages
 {
@@ -26,19 +29,26 @@ namespace hakaton_WEB.Pages
             _apiClient = apiClient;
         }
 
-        public async Task<IActionResult> OnPostAsync()  // Изменено на OnGetAsync
+        public async Task<IActionResult> OnPostAsync()  
         {
-            var testError = await _apiClient.GetEmployeeAuthAsync(login, password);  // Получение тестов из API
-            if (testError == null)
+            try
             {
-                errorlabel = "Ошибка. Неверный логин или пароль";
+                var user = await _apiClient.GetEmployeeAuthAsync(login, password);
+                HttpContext.Session.SetString("User", user.Id.ToString());
+                if (user != null) 
+                {
+                    return RedirectToPage("Interview");
+                }
+                return Page();
+
+            }
+            catch (ApiException ex)
+            {
+                // Обработка ошибки 401 Unauthorized
+                errorlabel = "Ошибка. Неверный логин или пароль.";
                 return Page();
             }
-            else
-            {
-                errorlabel = testError.Name;
-                return Page();
-            }
+           
         }
     }
 }

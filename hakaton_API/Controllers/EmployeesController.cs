@@ -51,18 +51,14 @@ namespace hakaton_API.Controllers
         [HttpGet("auth/{login},{password}")]
         public async Task<ActionResult<Employee>> GetAuthEmployee(string login, string password)
         {
-            // Проверка на пустые значения
-            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
-            {
-                return BadRequest("Логин и пароль должны быть предоставлены.");
-            }
+            
 
             var employee = await _context.Employee
                 .FirstOrDefaultAsync(u => u.Login == login && u.Password == password);
 
             if (employee == null)
             {
-                return Ok(null); // Возвращаем 401 Unauthorized
+                return Unauthorized(); // Возвращаем 401 Unauthorized
             }
 
             return Ok(employee); // Возвращаем 200 OK с данными сотрудника
