@@ -5,18 +5,13 @@
 }
 
 <h1>Авторизация пользователя</h1>
-
-<form method="post">
-    <div>
-        <label for="Login">Логин:</label>
-        <input type="text" id="Login" name="Login" required />
-        <label for="Password">Пароль:</label>
-        <input type="text" id="Password" name="Password" required />
-    </div>
-    <button type="submit">Авторизоваться</button>
-</form>
-
-@if (!string.IsNullOrEmpty(Model.Login) && !string.IsNullOrEmpty(Model.Password))
-{
-    <h2>Вы ввели имя: @Model.Name</h2>
-}
+<h2>Тесты</h2>
+<ul>
+    @foreach (var test in Model.test)
+    {
+        <form method="post">
+            <li>@test.ArticleTest: @test.CompetencyId</li>
+            <button type="submit">Авторизоваться</button>
+        </form>
+    }
+</ul>

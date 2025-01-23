@@ -11,5 +11,9 @@
 
         [Post("/roles")]
         Task<Role> CreateRoleAsync([Body] Role newRole);
+
+
+        [Get("/tests")]
+        Task<IEnumerable<Test>> GetTestAsync();
     }
 }

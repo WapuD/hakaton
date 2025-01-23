@@ -1,20 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using hakaton_API.Data;
+using hakaton_API.Controllers.Interface;
+using hakaton_API.Controllers.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DBContext' not found.")));
 
-// Add services to the container.
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<ICompetencyService, CompetencyService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

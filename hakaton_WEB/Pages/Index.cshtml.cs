@@ -12,10 +12,7 @@ namespace hakaton_WEB.Pages
         private readonly IApiClient _apiClient;
 
         [BindProperty]
-        public string Name { get; set; }
-        [BindProperty]
-        public int Id { get; set; }
-        public Role role { get; set; }
+        public List<Test> test{ get; set; }
         public IndexModel(ILogger<IndexModel> logger, IApiClient apiClient)
         {
             _logger = logger;
@@ -24,15 +21,7 @@ namespace hakaton_WEB.Pages
 
         public async Task OnGetAsync()
         {
-            var roles = await _apiClient.GetRoleAsync();
-        }
-        public async Task OnPostAsync()
-        {
-            if (Id != 0)
-            {
-                role = await _apiClient.GetRoleAsync(Id);
-                Name = role.Name;
-            }
+            var test = await _apiClient.GetTestAsync();
         }
     }
 }
