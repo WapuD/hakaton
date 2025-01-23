@@ -18,5 +18,8 @@
 
         [Get("/employee/{id}")]
         Task<Employee> GetEmployeeByIdAsync(int id);
+
+        [Get("/employees/auth/{login},{password}")]
+        Task<Employee> GetEmployeeAuthAsync(string login, string password);
     }
 }

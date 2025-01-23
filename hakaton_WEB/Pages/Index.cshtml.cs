@@ -2,6 +2,7 @@ using hakaton_API.Data.Models;
 using hakaton_WEB.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace hakaton_WEB.Pages
 {
@@ -11,7 +12,13 @@ namespace hakaton_WEB.Pages
         private readonly IApiClient _apiClient;
 
         [BindProperty]
-        public List<Test>? Tests { get; set; }  // Исправлено имя свойства на множественное число
+        public Employee? Users { get; set; }  // Исправлено имя свойства на множественное число
+        [BindProperty]
+        public string login { get; set; }
+        [BindProperty]
+        public string password { get; set; }
+        [BindProperty]
+        public string errorlabel { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IApiClient apiClient)
         {
@@ -19,9 +26,19 @@ namespace hakaton_WEB.Pages
             _apiClient = apiClient;
         }
 
-        public async Task OnGetAsync()  // Изменено на OnGetAsync
+        public async Task<IActionResult> OnPostAsync()  // Изменено на OnGetAsync
         {
-            Tests = (await _apiClient.GetTestAsync()).ToList();  // Получение тестов из API
+            var testError = await _apiClient.GetEmployeeAuthAsync(login, password);  // Получение тестов из API
+            if (testError == null)
+            {
+                errorlabel = "Ошибка. Неверный логин или пароль";
+                return Page();
+            }
+            else
+            {
+                errorlabel = testError.Name;
+                return Page();
+            }
         }
     }
 }
