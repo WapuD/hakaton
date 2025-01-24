@@ -16,10 +16,18 @@
         [Get("/tests")]
         Task<IEnumerable<Test>> GetTestAsync();
 
+
         [Get("/employee/{id}")]
         Task<Employee> GetEmployeeByIdAsync(int id);
 
         [Get("/employees/auth/{login},{password}")]
         Task<Employee> GetEmployeeAuthAsync(string login, string password);
+
+
+        [Get("/interviews")]
+        Task<IEnumerable<Interview>> GetInterviewsAsync();
+
+        [Get("/interviews")]
+        Task<IEnumerable<Interview>> UpdateInterviewAsync();
     }
 }

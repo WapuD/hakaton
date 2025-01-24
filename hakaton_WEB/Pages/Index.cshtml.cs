@@ -37,7 +37,7 @@ namespace hakaton_WEB.Pages
                 HttpContext.Session.SetString("User", user.Id.ToString());
                 if (user != null) 
                 {
-                    if (user.Role.Id == 1)
+                    if (user.RoleId == 1)
                         return RedirectToPage("Interview");
                 }
                 return Page();

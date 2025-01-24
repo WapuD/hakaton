@@ -25,7 +25,7 @@ namespace hakaton_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Interview>>> GetInterview()
         {
-            return await _context.Interview.ToListAsync();
+            return await _context.Interview.Include(i => i.Employee).ToListAsync();
         }
 
         // GET: api/Interviews/5
@@ -45,7 +45,7 @@ namespace hakaton_API.Controllers
         // PUT: api/Interviews/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInterview(int id, Interview interview)
+        public async Task<IActionResult> PutInterview(int id, InterviewDTO interview)
         {
             if (id != interview.Id)
             {
