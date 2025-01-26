@@ -12,7 +12,7 @@ using hakaton_API.Data;
 namespace hakaton_API.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20250122053706_InitialCreate")]
+    [Migration("20250126143041_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -52,7 +52,13 @@ namespace hakaton_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Login")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
                         .HasColumnType("text");
 
                     b.Property<string>("Patronymic")
@@ -196,6 +202,9 @@ namespace hakaton_API.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("text");
 
                     b.Property<string>("Answer0")
                         .HasColumnType("text");

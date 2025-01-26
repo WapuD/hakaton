@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{testId:int}"
 @model hakaton_WEB.Pages.Shared.TestPageModel
 
 <h1>Тест по компетенции: @Model.test.Competency.Name</h1>
@@ -26,18 +26,16 @@
                 <label class="form-check-label" for="answer3">@Model.CurrentQuestion.Answer3</label>
             </div>
 
-            <button type="submit" class="btn btn-primary">Следующий вопрос</button>
+            @if (!Model.IsLastQuestion)
+            {
+                <button type="submit" class="btn btn-primary">Следующий вопрос</button>
+            }
+            @if (Model.IsLastQuestion)
+            {
+                <a href="/TestsPage" class="btn btn-success">Закончить тестирование</a>
+            }
         </form>
     </div>
-
-    @if (Model.IsLastQuestion)
-    {
-        <a href="/Index" class="btn btn-success">Закончить тестирование</a>
-    }
-}
-else
-{
-    <p>Тест завершён.</p>
 }
 
 <style>
