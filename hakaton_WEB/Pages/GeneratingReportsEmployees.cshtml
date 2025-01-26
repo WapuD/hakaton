@@ -1,0 +1,58 @@
+﻿@page
+@model hakaton_WEB.Pages.GeneratingReportsEmployeesModel
+
+<h3>Формирование отчетов о сильных и слабых сторонах сотрудников</h3>
+
+<form method="get">
+    <div class="form-group">
+        <label for="SearchQuery">Поиск по имени или фамилии:</label>
+        <input type="text" asp-for="SearchQuery" class="form-control" />
+    </div>
+
+    <button type="submit" style="margin: 2px 0px;" class="btn btn-primary">Сформировать отчёт</button>
+    <button type="button" class="btn btn-secondary" id="resetButton">Сбросить поиск</button>
+</form>
+
+<form method="post">
+    <button type="submit" asp-page-handler="GenerateReport" class="btn btn-success">Скачать отчет</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Сотрудник</th>
+            <th>Компетенция</th>
+            <th>Оценка</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.TestingsList != null && Model.TestingsList.Any())
+        {
+            foreach (var testing in Model.TestingsList)
+            {
+                <tr>
+                    <td>@testing.EmployeeId @testing.Employee.Name @testing.Employee.Surname</td>
+                    <td>@testing.Competency?.Name</td>
+                    <td>@testing.Score</td>
+                    <td>@testing.Date.ToShortDateString()</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">Нет доступных данных.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.getElementById("resetButton").onclick = function () {
+            document.getElementById("SearchQuery").value = "";
+            window.location.href = window.location.pathname;
+        };
+    </script>
+}
