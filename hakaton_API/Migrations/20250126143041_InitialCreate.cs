@@ -48,6 +48,7 @@ namespace hakaton_API.Migrations
                     ArticleTest = table.Column<string>(type: "text", nullable: true),
                     CompetencyId = table.Column<int>(type: "integer", nullable: false),
                     Question = table.Column<string>(type: "text", nullable: true),
+                    Answer = table.Column<string>(type: "text", nullable: true),
                     Answer0 = table.Column<string>(type: "text", nullable: true),
                     Answer1 = table.Column<string>(type: "text", nullable: true),
                     Answer2 = table.Column<string>(type: "text", nullable: true),
@@ -73,7 +74,9 @@ namespace hakaton_API.Migrations
                     Surname = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Patronymic = table.Column<string>(type: "text", nullable: true),
-                    RoleId = table.Column<int>(type: "integer", nullable: false)
+                    RoleId = table.Column<int>(type: "integer", nullable: false),
+                    Login = table.Column<string>(type: "text", nullable: true),
+                    Password = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

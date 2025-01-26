@@ -200,6 +200,9 @@ namespace hakaton_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Answer")
+                        .HasColumnType("text");
+
                     b.Property<string>("Answer0")
                         .HasColumnType("text");
 
