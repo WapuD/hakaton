@@ -1,53 +1,101 @@
 ﻿@page
 @model hakaton_WEB.Pages.IndexModel
 
-<h1>Список тестов</h1>
+<h1 class="text-center">Авторизация</h1>
 
 <div class="test-container">
-    @if (Model.Tests != null && Model.Tests.Any())
-    {
-        foreach (var test in Model.Tests)
-        {
-            <div class="test-item">
-                <h3>@test.Competency.Name </h3>  <!-- Предполагается, что у Test есть свойство Name -->
-                <p>@test.ArticleTest</p>  <!-- Предполагается, что у Test есть свойство Description -->
-                <button class="btn">Пройти тест</button>
-            </div>
-        }
-    }
-    else
-    {
-        <p>Нет доступных тестов.</p>
-    }
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <section>
+                <form id="account" method="post">
+                    <hr />
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="login" name="login" required />
+                        <label for="login" class="form-label">Логин</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="password" name="password" required />
+                        <label for="password" class="form-label">Пароль</label>
+                    </div>
+                    @if (Model.errorlabel != null)
+                    {
+                        <label class="error-label"> @Model.errorlabel </label>
+                    }
+                    <div>
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Войти</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
 </div>
 
 <style>
+    /* Общие стили для контейнера */
     .test-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; /* Распределяет элементы по всей ширине */
-        margin: 0 -10px; /* Убирает отступы между колонками */
+        max-width: 800px; /* Максимальная ширина контейнера */
+        margin: auto; /* Центрирование контейнера */
+        padding: 20px; /* Внутренние отступы */
+        background-color: #f8f9fa; /* Цвет фона */
+        border-radius: 8px; /* Скругление углов */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для эффекта глубины */
     }
 
-    .test-item {
-        flex: 0 0 calc(50% - 20px); /* Задает ширину элемента (50% минус отступы) */
-        margin: 10px; /* Отступы между элементами */
-        padding: 15px;
-        border: 1px solid #ccc; /* Граница вокруг элемента */
-        border-radius: 5px; /* Закругление углов */
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта глубины */
+    .error-label{
+        color: red;
     }
 
-    .btn {
-        background-color: #007bff; /* Цвет кнопки */
-        color: white; /* Цвет текста кнопки */
-        border: none; /* Убираем границу */
-        padding: 10px 15px; /* Отступы внутри кнопки */
-        border-radius: 5px; /* Закругление углов кнопки */
-        cursor: pointer; /* Курсор при наведении */
+    h1 {
+        margin-bottom: 20px; /* Отступ снизу заголовка */
+        color: #333; /* Цвет заголовка */
     }
 
-        .btn:hover {
-            background-color: #0056b3; /* Цвет кнопки при наведении */
+    /* Стили для секции формы */
+    section {
+        padding: 20px; /* Внутренние отступы секции */
+    }
+
+    /* Стили для меток формы */
+    .form-label {
+        font-weight: bold; /* Жирный шрифт для меток */
+    }
+
+    /* Стили для полей ввода */
+    .form-floating {
+        position: relative; /* Позиционирование для плавающих меток */
+    }
+
+    .form-control {
+        width: 100%; /* Ширина на всю ширину родителя */
+        padding: 10px; /* Внутренние отступы для полей ввода */
+        border: 1px solid #ced4da; /* Граница поля ввода */
+        border-radius: 4px; /* Скругление углов поля ввода */
+        transition: border-color 0.2s; /* Плавный переход цвета границы */
+    }
+
+        .form-control:focus {
+            border-color: #80bdff; /* Цвет границы при фокусе */
+            outline: none; /* Убираем стандартное обводка при фокусе */
         }
+
+    /* Стили для кнопки отправки формы */
+    .btn {
+        display: inline-block; /* Отображение кнопки как блочный элемент */
+        padding: 10px 15px; /* Внутренние отступы кнопки */
+        font-size: 16px; /* Размер шрифта кнопки */
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Фоновый цвет кнопки */
+        color: white; /* Цвет текста кнопки */
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Цвет фона кнопки при наведении */
+        }
+
+    /* Стили для горизонтальной линии разделителя */
+    hr {
+        border-top: 1px solid #dee2e6; /* Цвет и стиль линии разделителя */
+    }
 </style>

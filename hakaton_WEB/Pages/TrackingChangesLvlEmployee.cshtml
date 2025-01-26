@@ -1,0 +1,148 @@
+﻿@page
+@model hakaton_WEB.Pages.TrackingChangesLvlEmployeeModel
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+
+<h2>Результаты тестирования</h2>
+
+<form method="get">
+    <div class="form-group">
+        <label for="SearchQuery">Поиск по имени или фамилии:</label>
+        <input type="text" asp-for="SearchQuery" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="StartDate">Дата начала:</label>
+        <input type="date" asp-for="StartDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="EndDate">Дата окончания:</label>
+        <input type="date" asp-for="EndDate" class="form-control" />
+    </div>
+
+    <button type="submit" style="margin: 2px 0px;" class="btn btn-primary">Поиск</button>
+    <button type="button" class="btn btn-secondary" id="resetButton">Сбросить поиск</button>
+</form>
+
+<button type="button" style="margin: 2px 0px;" class="btn btn-secondary" id="toggleViewButton">Показать графики</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Сотрудник</th>
+            <th>Компетенция</th>
+            <th>Тест</th>
+            <th>Оценка</th>
+            <th>Актуальность</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.TestingsList != null && Model.TestingsList.Any())
+        {
+            foreach (var testing in Model.TestingsList)
+            {
+                <tr>
+                    <td>@testing.EmployeeId @testing.Employee.Name @testing.Employee.Surname</td>
+                    <td>@testing.Competency?.Name</td>
+                    <td>@testing.ArticleTest</td>
+                    <td>@testing.Score</td>
+                    <td>@testing.Relevance</td>
+                    <td>@testing.Date.ToShortDateString()</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">Нет доступных данных.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="chartContainer" style="display:none;">
+        <canvas id="myChart"></canvas>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.getElementById("resetButton").onclick = function () {
+            document.getElementById("SearchQuery").value = "";
+            document.getElementById("StartDate").value = "";
+            document.getElementById("EndDate").value = "";
+            window.location.href = window.location.pathname;
+        };
+
+        document.getElementById("toggleViewButton").onclick = function () {
+            var tableContainer = document.querySelector('.table');
+            var chartContainer = document.getElementById('chartContainer');
+            var myChartCanvas = document.getElementById('myChart');
+
+            if (tableContainer.style.display === "none") {
+                tableContainer.style.display = "block";
+                chartContainer.style.display = "none";
+                myChartCanvas.style.display = "none"; // Скрываем график
+                this.innerText = "Показать графики";
+            } else {
+                tableContainer.style.display = "none";
+                chartContainer.style.display = "block";
+                myChartCanvas.style.display = "block"; // Показываем график
+                this.innerText = "Показать таблицу";
+
+                // Создаем график
+                var labels = [];
+                var dataSets = [];
+
+                @foreach (var chart in Model.EmployeeCompetencyCharts)
+                {
+                    <text>
+                            
+                        labels.push(...@Json.Serialize(chart.Dates.Select(d => d.ToShortDateString())));
+                        dataSets.push({
+                                    label: '@Html.Raw(chart.EmployeeName) - @Html.Raw(chart.CompetencyName)', // Используем преобразованное имя
+                            data: @Html.Raw(Json.Serialize(chart.Scores)),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: false
+                        });
+                    </text>
+                }
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...new Set(labels)], // Уникальные метки по датам
+                        datasets: dataSets
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    fontFamily: 'Roboto' // Указываем шрифт для оси Y
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    fontFamily: 'Roboto' // Указываем шрифт для оси X
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    fontFamily: 'Roboto' // Указываем шрифт для легенды
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+    </script>
+}
+
