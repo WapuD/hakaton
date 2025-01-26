@@ -5,11 +5,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace hakaton_WEB.Pages
 {
+    public class EmployeeCompetencyChart
+    {
+        public string EmployeeName { get; set; }
+        public string CompetencyName { get; set; }
+        public List<int> Scores { get; set; }
+        public List<DateTime> Dates { get; set; }
+    }
+
+
     public class TrackingChangesLvlEmployeeModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IApiClient _apiClient;
-        
+        public List<EmployeeCompetencyChart> EmployeeCompetencyCharts { get; set; } = new List<EmployeeCompetencyChart>();
+
+
         [BindProperty]
         public IEnumerable<Testing> TestingsList { get; set; }
         [BindProperty(SupportsGet = true)]
@@ -29,6 +40,7 @@ namespace hakaton_WEB.Pages
         {
             TestingsList = await _apiClient.GetTestingsAsync();
 
+            // Apply filters
             if (!string.IsNullOrEmpty(SearchQuery))
             {
                 TestingsList = TestingsList.Where(i =>
@@ -46,7 +58,19 @@ namespace hakaton_WEB.Pages
                 TestingsList = TestingsList.Where(t => t.Date <= EndDate.Value);
             }
 
-            // Сортировка по EmployeeId, CompetencyId и Date
+            // Group by Employee and Competency
+            var groupedResults = TestingsList.GroupBy(t => new { t.EmployeeId, t.CompetencyId, t.Employee.Name, t.Employee.Surname, CompetencyName = t.Competency.Name })
+                                              .Select(g => new EmployeeCompetencyChart
+                                              {
+                                                  EmployeeName = $"{g.Key.Name} {g.Key.Surname}",
+                                                  CompetencyName = g.Key.CompetencyName,
+                                                  Scores = g.OrderBy(t => t.Date).Select(t => t.Score).ToList(),
+                                                  Dates = g.OrderBy(t => t.Date).Select(t => t.Date).ToList()
+                                              }).ToList();
+
+            EmployeeCompetencyCharts = groupedResults;
+
+            // Sort results
             TestingsList = TestingsList.OrderBy(t => t.EmployeeId)
                                        .ThenBy(t => t.CompetencyId)
                                        .ThenBy(t => t.Date);

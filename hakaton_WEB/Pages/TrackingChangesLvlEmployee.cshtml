@@ -23,6 +23,8 @@
     <button type="button" class="btn btn-secondary" id="resetButton">Сбросить поиск</button>
 </form>
 
+<button type="button" style="margin: 2px 0px;" class="btn btn-secondary" id="toggleViewButton">Показать графики</button>
+
 <table class="table">
     <thead>
         <tr>
@@ -58,16 +60,67 @@
     </tbody>
 </table>
 
+<div id="chartContainer" style="display:none;">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @foreach (var chart in Model.EmployeeCompetencyCharts)
+    {
+        var canvasId = $"chart_{chart.EmployeeName.Replace(" ", "_")}_{chart.CompetencyName.Replace(" ", "_")}";
+        <h4>@chart.EmployeeName - @chart.CompetencyName</h4>
+        <canvas id="@canvasId" width="200px"></canvas>
+        <p>Scores: @string.Join(", ", chart.Scores)</p>
+        <p>Dates: @string.Join(", ", chart.Dates.Select(d => d.ToShortDateString()))</p>
+
+        // Инициализация графика внутри цикла
+        <script type="text/javascript">
+            var ctx = document.getElementById('@canvasId').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line', // Измените тип графика по необходимости
+                data: {
+                    labels: @Html.Raw(Json.Serialize(chart.Dates.Select(d => d.ToShortDateString()))),
+                    datasets: [{
+                        label: '@chart.CompetencyName',
+                        data: @Html.Raw(Json.Serialize(chart.Scores)),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    }
+</div>
+
 @section Scripts {
     <script type="text/javascript">
         document.getElementById("resetButton").onclick = function () {
-            // Очистка полей ввода
             document.getElementById("SearchQuery").value = "";
             document.getElementById("StartDate").value = "";
             document.getElementById("EndDate").value = "";
-            
-            // Перезагрузка страницы для сброса результатов
             window.location.href = window.location.pathname;
+        };
+
+        document.getElementById("toggleViewButton").onclick = function () {
+            var tableContainer = document.querySelector('.table');
+            var chartContainer = document.getElementById('chartContainer');
+            if (tableContainer.style.display === "none") {
+                tableContainer.style.display = "block";
+                chartContainer.style.display = "none";
+                this.innerText = "Показать графики";
+            } else {
+                tableContainer.style.display = "none";
+                chartContainer.style.display = "block";
+                this.innerText = "Показать таблицу";
+            }
         };
     </script>
 }
