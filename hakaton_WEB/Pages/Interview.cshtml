@@ -1,0 +1,52 @@
+﻿@page
+@model hakaton_WEB.Pages.InterviewModel
+
+<h1 class="text-center">Собеседования</h1>
+
+<div class="container mt-4">
+    <form id="search" method="get">
+        <div class="form-group">
+            <label for="SearchQuery">Поиск по имени или фамилии:</label>
+            <input type="text" class="form-control" id="SearchQuery" name="SearchQuery" required placeholder="Введите имя или фамилию..." />
+        </div>
+        <button id="search-submit" type="submit" style="margin: 5px 0px " class="btn btn-primary">Поиск</button>
+    </form>
+    @if (Model.InterviewList != null && Model.InterviewList.Any())
+    {
+        foreach (var interview in Model.InterviewList)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@interview.Surname @interview.Name @interview.Patronymic</h5>
+                    <p><strong>Сотрудник:</strong> @interview.Employee.Surname @interview.Employee.Name ID - @interview.Employee.Id</p>
+                    <p><strong>Дата:</strong> @interview.Date.ToString("dd.MM.yyyy")</p>
+                    <p><strong>Результат:</strong> @interview.Result</p>
+                    <p><strong>Комментарии:</strong> @(interview.Comments ?? "Нет комментариев")</p>
+
+                    <div class="form-group mt-3">
+                        
+                        <label for="commentInput_@interview.Id">Добавить комментарий:</label>
+                        <textarea class="form-control" id="commentInput_@interview.Id" rows="2" placeholder="Введите ваш комментарий..."></textarea>
+                        <button type="button" class="btn btn-primary mt-2">Сохранить комментарий</button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Нет доступных собеседований.</p>
+    }
+</div>
+
+<style>
+    .card {
+        border: 1px solid #007bff;
+        border-radius: 0.5rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+</style>

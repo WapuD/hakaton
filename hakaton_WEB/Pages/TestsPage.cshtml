@@ -1,0 +1,166 @@
+﻿@page
+@model hakaton_WEB.Pages.TestsPageModel
+
+<h1>Список тестов</h1>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingModal">
+    Оценить
+</button>
+
+<div class="test-container">
+    @if (Model.Tests != null && Model.Tests.Any())
+    {
+        foreach (var test in Model.Tests)
+        {
+            <div class="test-item">
+                <h3>@test.Competency.Name</h3> <!-- Название компетенции -->
+                <a asp-page="/TestPage" asp-route-testId="@test.Id" class="btn btn-primary">Пройти тест</a>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Нет доступных тестов.</p>
+    }
+</div>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="ratingModalLabel">Оцените тест</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="SubmitRating" id="ratingForm">
+                    <!-- Указываем обработчик -->
+                    <div id="starRating">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <span class="star" data-value="@i">&#9733;</span> <!-- Звезда -->
+                        }
+                    </div>
+                    <span id="ratingDisplay">0</span> <!-- Элемент для отображения выбранного рейтинга -->
+                    <input type="hidden" name="RatingValue" id="ratingValue" value="" required /> <!-- Скрытое поле для хранения значения рейтинга -->
+                    <!-- Поле для ввода комментария -->
+                    <div class="form-group">
+                        <label for="comment">Ваш комментарий:</label>
+                        <textarea class="form-control" id="comment" name="Comment" rows="3" placeholder="Введите ваш комментарий..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Сохранить рейтинг</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<style>
+    #starRating {
+        font-size: 30px; /* Размер звёздочек */
+        cursor: pointer; /* Курсор при наведении */
+        color: #ccc; /* Цвет невыбранных звёздочек */
+    }
+
+    .star.selected {
+        color: gold; /* Цвет выбранных звёздочек */
+    }
+
+    #ratingDisplay {
+        font-size: 30px; /* Размер текста для рейтинга */
+        margin-left: 10px; /* Отступ между звёздочками и текстом */
+    }
+
+</style>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.star');
+        const ratingValue = document.getElementById('ratingValue');
+        const ratingDisplay = document.getElementById('ratingDisplay');
+        const form = document.getElementById('ratingForm');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                const rating = this.getAttribute('data-value');
+                ratingValue.value = rating;
+                ratingDisplay.textContent = rating; // Обновляем текстовое значение
+
+                // Обновляем визуальное состояние звёздочек
+                stars.forEach(s => s.classList.remove('selected')); // Убираем выделение со всех звёздочек
+                for (let i = 0; i < rating; i++) {
+                    stars[i].classList.add('selected'); // Выделяем текущую и предыдущие звёздочки
+                }
+            });
+        });
+
+        form.addEventListener('submit', function (event) {
+            if (!ratingValue.value) {
+                alert("Пожалуйста, выберите количество звёзд.");
+                event.preventDefault(); // Предотвращает отправку формы
+            }
+        });
+    });
+
+    function submitRating() {
+        const rating = document.getElementById('ratingValue').value;
+        console.log("Выставленный рейтинг: ", rating);
+        // Здесь можно добавить AJAX-запрос для отправки рейтинга на сервер
+
+        $('#ratingModal').modal('hide'); // Закрыть модальное окно после отправки
+    }
+
+</script>
+
+
+
+
+<style>
+    .test-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Два столбца одинаковой ширины */
+        gap: 20px; /* Отступы между элементами */
+        margin: 20px; /* Общие отступы контейнера */
+    }
+
+    .test-item {
+        padding: 15px;
+        border: 1px solid #ccc; /* Граница вокруг элемента */
+        border-radius: 5px; /* Закругление углов */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта глубины */
+        display: flex; /* Используем flexbox для расположения содержимого внутри блока */
+        flex-direction: column; /* Вертикальное расположение элементов внутри блока */
+        justify-content: space-between; /* Разделяем пространство между элементами внутри блока */
+        height: auto; /* Высота автоматически подстраивается под содержимое */
+    }
+
+    .btn {
+        background-color: #007bff; /* Цвет кнопки */
+        color: white; /* Цвет текста кнопки */
+        border: none; /* Убираем границу */
+        padding: 10px 15px; /* Отступы внутри кнопки */
+        border-radius: 5px; /* Закругление углов кнопки */
+        cursor: pointer; /* Курсор при наведении */
+        margin-top: auto; /* Отодвигаем кнопку вниз в блоке */
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* Цвет кнопки при наведении */
+    }
+
+    #starRating {
+        font-size: 30px; /* Размер звёздочек */
+        cursor: pointer; /* Курсор при наведении */
+        color: #ccc; /* Цвет невыбранных звёздочек */
+    }
+
+    .star.selected {
+        color: gold; /* Цвет выбранных звёздочек */
+    }
+
+</style>

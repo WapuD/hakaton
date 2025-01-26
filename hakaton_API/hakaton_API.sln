@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hakaton_API", "hakaton_API.csproj", "{3858D3C3-67C0-404B-91DA-788460B1AC4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hakaton_API", "hakaton_API.csproj", "{3858D3C3-67C0-404B-91DA-788460B1AC4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hakaton_WEB", "..\hakaton_WEB\hakaton_WEB.csproj", "{E682DB0C-0216-415D-AF8A-35268CB4DC6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hakaton_WEB", "..\hakaton_WEB\hakaton_WEB.csproj", "{E682DB0C-0216-415D-AF8A-35268CB4DC6A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3858D3C3-67C0-404B-91DA-788460B1AC4B} = {3858D3C3-67C0-404B-91DA-788460B1AC4B}
 	EndProjectSection

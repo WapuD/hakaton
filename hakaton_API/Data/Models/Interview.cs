@@ -17,4 +17,17 @@ namespace hakaton_API.Data.Models
 
         public Employee? Employee { get; set; }
     }
+
+    public class InterviewDTO
+    {
+        public int Id { get; set; }
+        public string? Surname { get; set; }
+        public string? Name { get; set; }
+        public string? Patronymic { get; set; }
+        public int EmployeeId { get; set; }
+        public DateTime Date { get; set; }
+        public string? Result { get; set; }
+        public string? Comments { get; set; }
+
+    }
 }

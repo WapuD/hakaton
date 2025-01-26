@@ -76,8 +76,9 @@ namespace hakaton_API.Controllers
         // POST: api/Surveys
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Survey>> PostSurvey(Survey survey)
+        public async Task<ActionResult<Survey>> PostSurveyAsync(Survey survey)
         {
+            survey.Employee = await _context.Employee.FindAsync(survey.EmployeeId);
             _context.Survey.Add(survey);
             await _context.SaveChangesAsync();
 
