@@ -13,7 +13,7 @@ namespace hakaton_WEB.Pages
         public string Id { get; set; }
         [BindProperty]
         public IEnumerable<Interview> InterviewList { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public string SearchQuery { get; set; } // Поле для поискового запроса
         [BindProperty]
         public string CommentToEdit { get; set; }
@@ -23,7 +23,7 @@ namespace hakaton_WEB.Pages
             _logger = logger;
             _apiClient = apiClient;
         }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             Id = HttpContext.Session.GetString("User");
             InterviewList = await _apiClient.GetInterviewsAsync();
@@ -33,9 +33,9 @@ namespace hakaton_WEB.Pages
                 InterviewList = InterviewList.Where(i =>
                     (i.Surname != null && SearchQuery.Contains(i.Surname)) ||
                     (i.Name != null && SearchQuery.Contains(i.Name)));
-                //return Page();
+                return Page();
             }
-            //return Page();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostEditCommentAsync(int interviewId)
@@ -46,7 +46,7 @@ namespace hakaton_WEB.Pages
             {
                 interviewToUpdate.Comments = CommentToEdit;
                 // Вызов API для обновления комментария
-                await _apiClient.UpdateInterviewAsync(interviewToUpdate);
+                //await _apiClient.UpdateInterviewAsync(interviewToUpdate);
             }
 
             return RedirectToPage();

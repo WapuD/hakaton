@@ -1,0 +1,73 @@
+﻿@page
+@model hakaton_WEB.Pages.TrackingChangesLvlEmployeeModel
+
+<h2>Результаты тестирования</h2>
+
+<form method="get">
+    <div class="form-group">
+        <label for="SearchQuery">Поиск по имени или фамилии:</label>
+        <input type="text" asp-for="SearchQuery" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="StartDate">Дата начала:</label>
+        <input type="date" asp-for="StartDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="EndDate">Дата окончания:</label>
+        <input type="date" asp-for="EndDate" class="form-control" />
+    </div>
+
+    <button type="submit" style="margin: 2px 0px;" class="btn btn-primary">Поиск</button>
+    <button type="button" class="btn btn-secondary" id="resetButton">Сбросить поиск</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Сотрудник</th>
+            <th>Компетенция</th>
+            <th>Тест</th>
+            <th>Оценка</th>
+            <th>Актуальность</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.TestingsList != null && Model.TestingsList.Any())
+        {
+            foreach (var testing in Model.TestingsList)
+            {
+                <tr>
+                    <td>@testing.EmployeeId @testing.Employee.Name @testing.Employee.Surname</td>
+                    <td>@testing.Competency?.Name</td>
+                    <td>@testing.ArticleTest</td>
+                    <td>@testing.Score</td>
+                    <td>@testing.Relevance</td>
+                    <td>@testing.Date.ToShortDateString()</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">Нет доступных данных.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.getElementById("resetButton").onclick = function () {
+            // Очистка полей ввода
+            document.getElementById("SearchQuery").value = "";
+            document.getElementById("StartDate").value = "";
+            document.getElementById("EndDate").value = "";
+            
+            // Перезагрузка страницы для сброса результатов
+            window.location.href = window.location.pathname;
+        };
+    </script>
+}

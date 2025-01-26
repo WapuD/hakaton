@@ -29,5 +29,10 @@
 
         [Get("/interviews")]
         Task<IEnumerable<Interview>> UpdateInterviewAsync();
+
+
+        
+        [Get("/testings")]
+        Task<IEnumerable<Testing>> GetTestingsAsync();
     }
 }

@@ -25,7 +25,7 @@ namespace hakaton_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Testing>>> GetTesting()
         {
-            return await _context.Testing.ToListAsync();
+            return await _context.Testing.Include(i => i.Employee).Include(i => i.Competency).ToListAsync();
         }
 
         // GET: api/Testings/5
