@@ -27,8 +27,8 @@
         [Get("/interviews")]
         Task<IEnumerable<Interview>> GetInterviewsAsync();
 
-        [Get("/interviews")]
-        Task<IEnumerable<Interview>> UpdateInterviewAsync();
+        [Get("/interviews/EditComment/{id}")]
+        Task<IEnumerable<Interview>> UpdateInterviewAsync(int id);
 
 
         

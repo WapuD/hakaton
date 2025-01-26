@@ -44,8 +44,8 @@ namespace hakaton_API.Controllers
 
         // PUT: api/Interviews/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInterview(int id, InterviewDTO interview)
+        [HttpPut("EditComment/{id}")]
+        public async Task<IActionResult> PutInterview(int id, Interview interview)
         {
             if (id != interview.Id)
             {

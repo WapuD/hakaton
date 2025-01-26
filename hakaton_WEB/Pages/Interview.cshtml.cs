@@ -45,7 +45,7 @@ namespace hakaton_WEB.Pages
             if (interviewToUpdate != null)
             {
                 interviewToUpdate.Comments = CommentToEdit;
-                // Вызов API для обновления комментария
+                //Вызов API для обновления комментария
                 //await _apiClient.UpdateInterviewAsync(interviewToUpdate);
             }
 

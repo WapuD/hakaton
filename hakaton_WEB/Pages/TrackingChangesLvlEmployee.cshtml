@@ -1,5 +1,7 @@
 ﻿@page
 @model hakaton_WEB.Pages.TrackingChangesLvlEmployeeModel
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
 
 <h2>Результаты тестирования</h2>
 
@@ -61,43 +63,7 @@
 </table>
 
 <div id="chartContainer" style="display:none;">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-    @foreach (var chart in Model.EmployeeCompetencyCharts)
-    {
-        var canvasId = $"chart_{chart.EmployeeName.Replace(" ", "_")}_{chart.CompetencyName.Replace(" ", "_")}";
-        <h4>@chart.EmployeeName - @chart.CompetencyName</h4>
-        <canvas id="@canvasId" width="200px"></canvas>
-        <p>Scores: @string.Join(", ", chart.Scores)</p>
-        <p>Dates: @string.Join(", ", chart.Dates.Select(d => d.ToShortDateString()))</p>
-
-        // Инициализация графика внутри цикла
-        <script type="text/javascript">
-            var ctx = document.getElementById('@canvasId').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line', // Измените тип графика по необходимости
-                data: {
-                    labels: @Html.Raw(Json.Serialize(chart.Dates.Select(d => d.ToShortDateString()))),
-                    datasets: [{
-                        label: '@chart.CompetencyName',
-                        data: @Html.Raw(Json.Serialize(chart.Scores)),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script>
-    }
+        <canvas id="myChart"></canvas>
 </div>
 
 @section Scripts {
@@ -112,15 +78,71 @@
         document.getElementById("toggleViewButton").onclick = function () {
             var tableContainer = document.querySelector('.table');
             var chartContainer = document.getElementById('chartContainer');
+            var myChartCanvas = document.getElementById('myChart');
+
             if (tableContainer.style.display === "none") {
                 tableContainer.style.display = "block";
                 chartContainer.style.display = "none";
+                myChartCanvas.style.display = "none"; // Скрываем график
                 this.innerText = "Показать графики";
             } else {
                 tableContainer.style.display = "none";
                 chartContainer.style.display = "block";
+                myChartCanvas.style.display = "block"; // Показываем график
                 this.innerText = "Показать таблицу";
+
+                // Создаем график
+                var labels = [];
+                var dataSets = [];
+
+                @foreach (var chart in Model.EmployeeCompetencyCharts)
+                {
+                    <text>
+                            
+                        labels.push(...@Json.Serialize(chart.Dates.Select(d => d.ToShortDateString())));
+                        dataSets.push({
+                                    label: '@Html.Raw(chart.EmployeeName) - @Html.Raw(chart.CompetencyName)', // Используем преобразованное имя
+                            data: @Html.Raw(Json.Serialize(chart.Scores)),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: false
+                        });
+                    </text>
+                }
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [...new Set(labels)], // Уникальные метки по датам
+                        datasets: dataSets
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    fontFamily: 'Roboto' // Указываем шрифт для оси Y
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    fontFamily: 'Roboto' // Указываем шрифт для оси X
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    fontFamily: 'Roboto' // Указываем шрифт для легенды
+                                }
+                            }
+                        }
+                    }
+                });
             }
         };
     </script>
 }
+

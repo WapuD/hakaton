@@ -1,7 +1,9 @@
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using hakaton_API.Data.Models;
 using hakaton_WEB.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using OxyPlot.Wpf;
 
 namespace hakaton_WEB.Pages
 {
@@ -75,6 +77,8 @@ namespace hakaton_WEB.Pages
                                        .ThenBy(t => t.CompetencyId)
                                        .ThenBy(t => t.Date);
         }
+
+
 
     }
 }
