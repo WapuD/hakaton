@@ -29,6 +29,17 @@ namespace hakaton_WEB.Pages
                 .Select(g => g.First()) // Берем только первый тест из каждой группы
                 .ToList();
         }
+        public async Task<IActionResult> OnPostSubmitRating(int RatingValue, string Comment)
+        {
+            var survey = new Survey()
+            {
+                EmployeeId = 1, //Convert.ToInt32(HttpContext.Session.GetString("User")),
+                Comment = Comment,
+                Score = RatingValue,
+            };
+            _apiClient.PostSurveyAsync(survey);
+            return RedirectToPage(); // Перенаправление на ту же страницу после обработки
+        }
 
     }
 }

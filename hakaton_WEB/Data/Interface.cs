@@ -24,5 +24,9 @@
 
         [Post("/testings")]
         Task<Testing> PostTestingAsync(TestingDto testing);
+
+
+        [Post("/surveys")]
+        Task<Survey> PostSurveyAsync(Survey survey);
     }
 }
