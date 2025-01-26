@@ -30,50 +30,95 @@ namespace hakaton_WEB.Pages.Shared
         [BindProperty]
         public List<int> UserAnswers { get; set; } = new List<int>(); // Список для хранения ответов пользователя
 
+
+        [BindProperty]
+        public string SuccessMessage { get; set; }
+
+
         public TestPageModel(ILogger<TestPageModel> logger, IApiClient apiClient)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
 
-        public async Task OnGetAsync(int testId)  // Изменено на OnGetAsync
+        public async Task OnGetAsync(int testId)
         {
             test = await _apiClient.GetTestAsync(testId);  // Получение теста из API
             tests = await _apiClient.GetTestAsync();  // Получение тестов из API
+
             if (tests != null && test.ArticleTest != null)
             {
                 _questions = tests.Where(t => t.ArticleTest == test.ArticleTest).ToList();
-            }
-            if (_questions != null)
-            {
-                CurrentTest = new Test { ArticleTest = _questions[0].ArticleTest }; // Установите артикул теста
-                CurrentQuestion = _questions[0]; // Установите первый вопрос
                 TempData["Questions"] = JsonConvert.SerializeObject(_questions);
+
+                // Установите первый вопрос при загрузке страницы
+                if (_questions.Count > 0)
+                {
+                    CurrentQuestion = _questions[0]; // Установите первый вопрос
+                    IsLastQuestion = (_questions.Count == 1); // Если только один вопрос, это последний
+                }
             }
         }
+
 
         public IActionResult OnPost(string selectedAnswer)
         {
             if (TempData["Questions"] != null)
             {
                 _questions = JsonConvert.DeserializeObject<List<Test>>(TempData["Questions"].ToString());
+                TempData["Questions"] = JsonConvert.SerializeObject(_questions);
             }
 
             if (int.TryParse(selectedAnswer, out int answerIndex))
             {
+                if (TempData["Answers"] != null)
+                {
+                    UserAnswers = JsonConvert.DeserializeObject<List<int>>(TempData["Answers"].ToString());
+                }
                 UserAnswers.Add(answerIndex); // Сохранение ответа пользователя
+                TempData["Answers"] = JsonConvert.SerializeObject(UserAnswers);
             }
-            int currentIndex = _questions.FindIndex(q => q.Id == _questions[UserAnswers.Count()].Id);
-            if (currentIndex + 1 < _questions.Count)
+
+            // Получение текущего индекса вопроса
+            int currentIndex = UserAnswers.Count;
+
+            // Проверка, есть ли следующий вопрос
+            if (currentIndex < _questions.Count)
             {
-                CurrentQuestion = _questions[currentIndex + 1]; // Переход к следующему вопросу
-                IsLastQuestion = (currentIndex + 2) == _questions.Count; // Проверка, является ли это последним вопросом
+                CurrentQuestion = _questions[currentIndex]; // Переход к следующему вопросу
+                IsLastQuestion = currentIndex == _questions.Count; // Проверка, является ли это последним вопросом
                 return Page();
             }
             else
             {
-                return RedirectToPage("ResultsPage", new { answers = UserAnswers }); // Перенаправление на страницу результатов с передачей ответов
+                int Score = 0;
+                for (int i = 0; i < UserAnswers.Count; i++)
+                {
+                    if (UserAnswers[i] == _questions[i].Answer) // Предполагается, что CorrectAnswerIndex - это индекс правильного ответа
+                    {
+                        Score++;
+                    }
+                }
+
+                var newTesting = new TestingDto();
+                newTesting.Score = Score;
+                newTesting.ArticleTest = _questions[0].ArticleTest;
+                newTesting.CompetencyId = _questions[0].CompetencyId;
+                newTesting.EmployeeId = 1; //Convert.ToInt32(HttpContext.Session.GetString("User")),
+
+                testTest(newTesting);
+
+                TempData.Remove("Answers");
+                TempData.Remove("Questions");
+                SuccessMessage = "Вы успешно прошли тест!"; // Установка сообщения об успехе
+                return Page(); // Возврат на ту же страницу для отображения сообщения
+                //return RedirectToPage("ResultsPage", new { answers = UserAnswers }); // Перенаправление на страницу результатов с передачей ответов
             }
+        }
+
+        public async Task testTest(TestingDto test)
+        {
+            await _apiClient.PostTestingAsync(test);
         }
     }
 }

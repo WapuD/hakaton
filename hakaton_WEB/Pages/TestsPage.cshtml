@@ -9,8 +9,7 @@
         foreach (var test in Model.Tests)
         {
             <div class="test-item">
-                <h3>@test.Competency.Name </h3>  <!-- Предполагается, что у Test есть свойство Name -->
-                <p>@test.ArticleTest</p>  <!-- Предполагается, что у Test есть свойство Description -->
+                <h3>@test.Competency.Name</h3> <!-- Название компетенции -->
                 <a asp-page="/TestPage" asp-route-testId="@test.Id" class="btn btn-primary">Пройти тест</a>
             </div>
         }
@@ -23,19 +22,21 @@
 
 <style>
     .test-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; /* Распределяет элементы по всей ширине */
-        margin: 0 -10px; /* Убирает отступы между колонками */
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Два столбца одинаковой ширины */
+        gap: 20px; /* Отступы между элементами */
+        margin: 20px; /* Общие отступы контейнера */
     }
 
     .test-item {
-        flex: 0 0 calc(50% - 20px); /* Задает ширину элемента (50% минус отступы) */
-        margin: 10px; /* Отступы между элементами */
         padding: 15px;
         border: 1px solid #ccc; /* Граница вокруг элемента */
         border-radius: 5px; /* Закругление углов */
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Тень для эффекта глубины */
+        display: flex; /* Используем flexbox для расположения содержимого внутри блока */
+        flex-direction: column; /* Вертикальное расположение элементов внутри блока */
+        justify-content: space-between; /* Разделяем пространство между элементами внутри блока */
+        height: auto; /* Высота автоматически подстраивается под содержимое */
     }
 
     .btn {
@@ -45,9 +46,11 @@
         padding: 10px 15px; /* Отступы внутри кнопки */
         border-radius: 5px; /* Закругление углов кнопки */
         cursor: pointer; /* Курсор при наведении */
+        margin-top: auto; /* Отодвигаем кнопку вниз в блоке */
     }
 
-        .btn:hover {
-            background-color: #0056b3; /* Цвет кнопки при наведении */
-        }
+    .btn:hover {
+        background-color: #0056b3; /* Цвет кнопки при наведении */
+    }
+
 </style>

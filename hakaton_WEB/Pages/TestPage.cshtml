@@ -1,8 +1,13 @@
 ﻿@page "{testId:int}"
 @model hakaton_WEB.Pages.Shared.TestPageModel
 
-<h1>Тест по компетенции: @Model.test.Competency.Name</h1>
-
+<h1>Тест</h1>
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @Model.SuccessMessage
+    </div>
+}
 @if (Model.CurrentQuestion != null)
 {
     <div class="question">
@@ -30,10 +35,11 @@
             {
                 <button type="submit" class="btn btn-primary">Следующий вопрос</button>
             }
-            @if (Model.IsLastQuestion)
+            else
             {
                 <a href="/TestsPage" class="btn btn-success">Закончить тестирование</a>
             }
+
         </form>
     </div>
 }

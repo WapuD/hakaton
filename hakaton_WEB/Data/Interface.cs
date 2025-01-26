@@ -9,7 +9,7 @@
         [Get("/roles/{id}")]
         Task<Role> GetRoleAsync(int id);
 
-        [Post("/roles")]
+        [Post("/role")]
         Task<Role> CreateRoleAsync([Body] Role newRole);
 
 
@@ -20,5 +20,9 @@
 
         [Get("/employee/{id}")]
         Task<Employee> GetEmployeeByIdAsync(int id);
+
+
+        [Post("/testings")]
+        Task<Testing> PostTestingAsync(TestingDto testing);
     }
 }

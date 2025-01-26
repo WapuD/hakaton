@@ -19,9 +19,16 @@ namespace hakaton_WEB.Pages
             _apiClient = apiClient;
         }
 
-        public async Task OnGetAsync()  // Изменено на OnGetAsync
+        public async Task OnGetAsync()
         {
-            Tests = (await _apiClient.GetTestAsync()).ToList();  // Получение тестов из API
+            var tests = await _apiClient.GetTestAsync();
+
+            // Группируем по ArticleTest и выбираем первый тест из каждой группы
+            Tests = tests
+                .GroupBy(t => t.ArticleTest)
+                .Select(g => g.First()) // Берем только первый тест из каждой группы
+                .ToList();
         }
+
     }
 }

@@ -76,10 +76,37 @@ namespace hakaton_API.Controllers
         // POST: api/Testings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Testing>> PostTesting(Testing testing)
+        public async Task<ActionResult<Testing>> PostTestingAsync(TestingDto testing)
         {
-            _context.Testing.Add(testing);
-            await _context.SaveChangesAsync();
+            var relevance = false;
+
+            if (testing.Score > 3)
+            {
+                relevance = true;
+            }
+
+            var testingNew = new Testing();
+
+            testingNew.Score = testing.Score;
+            testingNew.ArticleTest = testing.ArticleTest;
+            testingNew.CompetencyId = testing.CompetencyId;
+            testingNew.EmployeeId = testing.EmployeeId;
+
+            testingNew.Relevance = relevance;
+            testingNew.Date = DateTimeOffset.Now.UtcDateTime;
+
+            testingNew.Competency = await _context.Competency.FindAsync(testing.CompetencyId);
+            testingNew.Employee = await _context.Employee.FindAsync(testing.EmployeeId);
+
+            try
+            {
+                _context.Testing.Add(testingNew);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ошибка при сохранении тестирования.");
+            }
 
             return CreatedAtAction("GetTesting", new { id = testing.Id }, testing);
         }
