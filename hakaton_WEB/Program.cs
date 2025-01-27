@@ -42,9 +42,5 @@ app.UseSession(); // ¬ключите поддержку сессий
 app.UseAuthorization();
 
 app.MapRazorPages();
-app.MapGet("/", async context =>
-{
-    context.Response.Redirect("/TestsPage");
-});
 
 app.Run();

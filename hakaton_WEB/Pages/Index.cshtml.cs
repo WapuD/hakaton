@@ -34,11 +34,14 @@ namespace hakaton_WEB.Pages
             try
             {
                 var user = await _apiClient.GetEmployeeAuthAsync(login, password);
-                HttpContext.Session.SetString("User", user.Id.ToString());
-                if (user != null) 
+                if (user != null)
                 {
+                    HttpContext.Session.SetString("User", user.Id.ToString());
+                    HttpContext.Session.SetString("UserRole", user.RoleId.ToString());
                     if (user.RoleId == 1)
                         return RedirectToPage("Interview");
+                    else
+                        return RedirectToPage("TestsPage");
                 }
                 return Page();
 

@@ -15,6 +15,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
 </head>
+
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -25,17 +27,29 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @{
+                        var userRole = Context.Session.GetString("UserRole");
+                    }
+
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/TrackingChangesLvlEmployee">Тестирование</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Interview">Собеседования</a>
-                        </li>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/GeneratingReportsEmployees">Отчёт по сотрудникам</a>
-                        </li>
+                        @if (userRole == "1")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/TrackingChangesLvlEmployee">Тестирование</a>
+                            </li>
+                        }
+                        @if (userRole == "1")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Interview">Собеседования</a>
+                            </li>
+                        }
+                        @if (userRole == "1")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/GeneratingReportsEmployees">Отчёт по сотрудникам</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
