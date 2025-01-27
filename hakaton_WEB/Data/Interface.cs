@@ -18,7 +18,7 @@
         Task<Test> GetTestAsync(int id);
 
 
-        [Get("/employee/{id}")]
+        [Get("/employees/{id}")]
         Task<Employee> GetEmployeeByIdAsync(int id);
         [Get("/employees/auth/{login},{password}")]
         Task<Employee> GetEmployeeAuthAsync(string login, string password);
@@ -36,7 +36,8 @@
 
         [Get("/interviews")]
         Task<IEnumerable<Interview>> GetInterviewsAsync();
-        [Get("/interviews/EditComment/{id}")]
-        Task<IEnumerable<Interview>> UpdateInterviewAsync(int id);
+
+        [Put("/interviews/{newInterview}")]
+        Task UpdateInterviewAsync(InterviewDTO newInterview);
     }
 }

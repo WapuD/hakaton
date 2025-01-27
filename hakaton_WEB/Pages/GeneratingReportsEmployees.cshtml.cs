@@ -115,7 +115,7 @@ namespace hakaton_WEB.Pages
                             row.Append(
                                 CreateTableCell(testing.Competency?.Name),
                                 CreateTableCell(testing.Score.ToString()),
-                                CreateTableCell(testing.Date.ToShortDateString())
+                                CreateTableCell(testing.Date.DateTime.ToShortDateString())
                             );
                             table.Append(row);
                         }

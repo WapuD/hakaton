@@ -12,7 +12,7 @@ namespace hakaton_WEB.Pages
         public string EmployeeName { get; set; }
         public string CompetencyName { get; set; }
         public List<int> Scores { get; set; }
-        public List<DateTime> Dates { get; set; }
+        public List<DateTimeOffset> Dates { get; set; }
     }
 
 
@@ -28,9 +28,9 @@ namespace hakaton_WEB.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchQuery { get; set; } // Поле для поискового запроса
         [BindProperty(SupportsGet = true)]
-        public DateTime? StartDate { get; set; } // Дата начала
+        public DateTimeOffset? StartDate { get; set; } // Дата начала
         [BindProperty(SupportsGet = true)]
-        public DateTime? EndDate { get; set; } // Дата окончания
+        public DateTimeOffset? EndDate { get; set; } // Дата окончания
 
 
         public TrackingChangesLvlEmployeeModel(ILogger<IndexModel> logger, IApiClient apiClient)

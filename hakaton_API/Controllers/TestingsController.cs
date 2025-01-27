@@ -78,38 +78,41 @@ namespace hakaton_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Testing>> PostTestingAsync(TestingDto testing)
         {
-            var relevance = false;
-
-            if (testing.Score > 3)
+            var testingNew = new Testing
             {
-                relevance = true;
+                Score = testing.Score,
+                ArticleTest = testing.ArticleTest,
+                CompetencyId = testing.CompetencyId,
+                EmployeeId = testing.EmployeeId,
+                Relevance = true, // Значение для новой записи
+                Date = DateTimeOffset.Now // Установите текущее время
+            };
+
+            // Поиск существующих записей с таким же EmployeeId и CompetencyId
+            var existingTestings = await _context.Testing
+                .Where(t => t.EmployeeId == testing.EmployeeId && t.CompetencyId == testing.CompetencyId)
+                .ToListAsync();
+
+            // Установка Relevance в false для найденных записей
+            foreach (var existingTesting in existingTestings)
+            {
+                existingTesting.Relevance = false;
+                _context.Testing.Update(existingTesting); // Обновление записи в контексте
             }
-
-            var testingNew = new Testing();
-
-            testingNew.Score = testing.Score;
-            testingNew.ArticleTest = testing.ArticleTest;
-            testingNew.CompetencyId = testing.CompetencyId;
-            testingNew.EmployeeId = testing.EmployeeId;
-
-            testingNew.Relevance = relevance;
-            testingNew.Date = DateTimeOffset.Now.UtcDateTime;
-
-            testingNew.Competency = await _context.Competency.FindAsync(testing.CompetencyId);
-            testingNew.Employee = await _context.Employee.FindAsync(testing.EmployeeId);
 
             try
             {
-                _context.Testing.Add(testingNew);
-                await _context.SaveChangesAsync();
+                _context.Testing.Add(testingNew); // Добавление новой записи
+                await _context.SaveChangesAsync(); // Сохранение изменений
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "Ошибка при сохранении тестирования.");
             }
 
-            return CreatedAtAction("GetTesting", new { id = testing.Id }, testing);
+            return CreatedAtAction("GetTesting", new { id = testingNew.Id }, testingNew);
         }
+
 
         // DELETE: api/Testings/5
         [HttpDelete("{id}")]

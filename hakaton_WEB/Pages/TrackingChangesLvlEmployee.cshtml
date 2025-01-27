@@ -49,7 +49,7 @@
                     <td>@testing.ArticleTest</td>
                     <td>@testing.Score</td>
                     <td>@testing.Relevance</td>
-                    <td>@testing.Date.ToShortDateString()</td>
+                    <td>@testing.Date.DateTime.ToShortDateString()</td>
                 </tr>
             }
         }
@@ -98,8 +98,8 @@
                 @foreach (var chart in Model.EmployeeCompetencyCharts)
                 {
                     <text>
-                            
-                        labels.push(...@Json.Serialize(chart.Dates.Select(d => d.ToShortDateString())));
+
+                        labels.push(...@Json.Serialize(chart.Dates.Select(d => d.DateTime.ToShortDateString())));
                         dataSets.push({
                                     label: '@Html.Raw(chart.EmployeeName) - @Html.Raw(chart.CompetencyName)', // Используем преобразованное имя
                             data: @Html.Raw(Json.Serialize(chart.Scores)),

@@ -104,7 +104,7 @@ namespace hakaton_WEB.Pages.Shared
                 newTesting.Score = Score;
                 newTesting.ArticleTest = _questions[0].ArticleTest;
                 newTesting.CompetencyId = _questions[0].CompetencyId;
-                newTesting.EmployeeId = 1; //Convert.ToInt32(HttpContext.Session.GetString("User")),
+                newTesting.EmployeeId = Convert.ToInt32(HttpContext.Session.GetString("User"));
 
                 testTest(newTesting);
 

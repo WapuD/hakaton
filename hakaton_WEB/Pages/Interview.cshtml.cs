@@ -38,19 +38,22 @@ namespace hakaton_WEB.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostEditCommentAsync(int interviewId)
+        public async Task<IActionResult> OnPostEditCommentAsync(int interviewId, string commentToEdit)
         {
-            // Здесь вы можете добавить логику для обновления комментария через API
-            var interviewToUpdate = InterviewList.FirstOrDefault(i => i.Id == interviewId);
-            if (interviewToUpdate != null)
+            var interview = new InterviewDTO()
             {
-                interviewToUpdate.Comments = CommentToEdit;
-                //Вызов API для обновления комментария
-                //await _apiClient.UpdateInterviewAsync(interviewToUpdate);
+                Id = interviewId,
+                Comments = commentToEdit
+            };
+
+            if (interview != null)
+            {
+                await _apiClient.UpdateInterviewAsync(interview);
             }
 
             return RedirectToPage();
         }
+
 
 
     }

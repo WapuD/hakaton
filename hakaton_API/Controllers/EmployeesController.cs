@@ -36,13 +36,14 @@ namespace hakaton_API.Controllers
 
         // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        public async Task<ActionResult<Employee>> GetEmployeeByIdAsync(int id)
         {
             var employee = await _context.Employee.FindAsync(id);
 
             if (employee == null)
             {
-                return NotFound();
+                employee = await _context.Employee.FindAsync(1);
+                return employee;
             }
 
             return employee;

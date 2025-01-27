@@ -2,9 +2,10 @@
 @model hakaton_WEB.Pages.TestsPageModel
 
 <h1>Список тестов</h1>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingModal">
-    Оценить
-</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingModal">Оценить</button>
+<button type="button" class="btn btn-success" onclick="window.location.href='@Url.Page("TestsPage", "DownloadReport")'">Скачать отчёт</button>
+
+
 
 <div class="test-container">
     @if (Model.Tests != null && Model.Tests.Any())

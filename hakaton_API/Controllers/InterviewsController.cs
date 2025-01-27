@@ -41,34 +41,18 @@ namespace hakaton_API.Controllers
 
             return interview;
         }
-
         // PUT: api/Interviews/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("EditComment/{id}")]
-        public async Task<IActionResult> PutInterview(int id, Interview interview)
+        [HttpPut("interviews/{newInterview}")]
+        public async Task<IActionResult> UpdateInterviewAsync(InterviewDTO newInterview)
         {
-            if (id != interview.Id)
-            {
-                return BadRequest();
-            }
+            var interview = await _context.Interview.FindAsync(newInterview.Id);
+
+            interview.Comments = newInterview.Comments;
 
             _context.Entry(interview).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InterviewExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

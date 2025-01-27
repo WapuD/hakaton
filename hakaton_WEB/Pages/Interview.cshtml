@@ -24,11 +24,14 @@
                     <p><strong>Комментарии:</strong> @(interview.Comments ?? "Нет комментариев")</p>
 
                     <div class="form-group mt-3">
-                        
-                        <label for="commentInput_@interview.Id">Добавить комментарий:</label>
-                        <textarea class="form-control" id="commentInput_@interview.Id" rows="2" placeholder="Введите ваш комментарий..."></textarea>
-                        <button type="button" class="btn btn-primary mt-2">Сохранить комментарий</button>
+                        <form method="post" asp-page-handler="EditComment">
+                            <input type="hidden" name="interviewId" value="@interview.Id" />
+                            <label for="commentInput_@interview.Id">Добавить комментарий:</label>
+                            <textarea class="form-control" id="commentInput_@interview.Id" name="CommentToEdit" rows="2" placeholder="Введите ваш комментарий..."></textarea>
+                            <button type="submit" class="btn btn-primary mt-2">Сохранить комментарий</button>
+                        </form>
                     </div>
+
                 </div>
             </div>
         }
